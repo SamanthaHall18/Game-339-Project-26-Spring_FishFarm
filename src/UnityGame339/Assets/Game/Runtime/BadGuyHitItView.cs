@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Game.Runtime
 {
-    public class BadGuyHitItView : ObserverMonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class BadGuyHitItView : ObserverMonoBehaviour
     {
         [SerializeField] private Button button;
 
@@ -27,16 +27,6 @@ namespace Game.Runtime
         
             var dmg = damageService.CalculateDamage(gameState.BadGuy, gameState.GoodGuy);
             damageService.ApplyDamage(gameState.GoodGuy, dmg);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            Debug.LogWarning("OnPointerEnter");
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            Debug.LogWarning("OnPointerExit");
         }
     }
 }

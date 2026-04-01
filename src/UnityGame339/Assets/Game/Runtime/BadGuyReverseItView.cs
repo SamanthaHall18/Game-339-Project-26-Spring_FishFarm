@@ -23,8 +23,10 @@ namespace Game.Runtime
         private static void OnButtonClick()
         {
             var gameState = ServiceResolver.Resolve<GameState>();
+            
             var stringService = ServiceResolver.Resolve<IStringService>();
             var reversedString = stringService.Reverse(gameState.GoodGuy.Name.Value);
+            
             gameState.GoodGuy.Name.Value = reversedString;
         }
     }

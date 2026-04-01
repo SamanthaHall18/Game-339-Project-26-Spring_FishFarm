@@ -1,38 +1,36 @@
-using Game339.Shared;
 using Game339.Shared.Models;
 using TMPro;
 
 namespace Game.Runtime
 {
-    using System;
-    using UnityEngine;
+public class GoodGuyHpView : ObserverMonoBehaviour
+{
+    public TextMeshProUGUI thisIsMyLabel;
 
-    [Serializable]
-    public class ObservableInt : ObservableValue<int>, ISerializationCallbackReceiver
+    public bool useAlternativeMessage;
+
+    protected override void Subscribe()
     {
-        [SerializeField] private int initialValue;
-
-        public void OnAfterDeserialize()  => Value = initialValue;
-        public void OnBeforeSerialize()   => initialValue = Value;
+        var gameState = ServiceResolver.Resolve<GameState>();
+        gameState.GoodGuy.Health.ChangeEvent += OnGoodGuyHealthChange;
     }
 
-    public class GoodGuyHpView : ObserverMonoBehaviour
+    protected override void Unsubscribe()
     {
-        private static GameState GameState => ServiceResolver.Resolve<GameState>();
+        var gameState = ServiceResolver.Resolve<GameState>();
+        gameState.GoodGuy.Health.ChangeEvent -= OnGoodGuyHealthChange;
+    }
 
-        public TextMeshProUGUI thisIsMyLabel;
-
-        public bool useAlternativeMessage;
-
-        protected override void Subscribe() => GameState.GoodGuy.Health.ChangeEvent += OnGoodGuyHealthChange;
-
-        protected override void Unsubscribe() => GameState.GoodGuy.Health.ChangeEvent -= OnGoodGuyHealthChange;
-
-        private void OnGoodGuyHealthChange(int health)
+    private void OnGoodGuyHealthChange(int health)
+    {
+        if (useAlternativeMessage)
         {
-            thisIsMyLabel.text = useAlternativeMessage
-                ? "WAT?? -" + health
-                : "Health: " + health;
+            thisIsMyLabel.text = "WAT?? -" + health;
+        }
+        else
+        {
+            thisIsMyLabel.text = "Health: " + health;
         }
     }
+}
 }
